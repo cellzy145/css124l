@@ -211,10 +211,10 @@ public class DrawingApp extends JFrame implements ActionListener, ChangeListener
             canvasPanel.redo();
         } else if (e.getSource() == zoomInItem) {
             //zoom in by 1.1
-            canvasPanel.zoomIn();
+            canvasPanel.zoom(1.1);
         } else if (e.getSource() == zoomOutItem) {
             //zoom out by 0.9
-            canvasPanel.zoomOut();
+            canvasPanel.zoom(0.9);
         } else if (e.getSource() == clearItem || e.getSource() == clearButton) {
             //clear current canvas
             canvasPanel.clearCanvas();
@@ -616,13 +616,8 @@ public class DrawingApp extends JFrame implements ActionListener, ChangeListener
             }
         }
 
-        public void zoomIn() {
-            zoomFactor *= 1.1;
-            repaint();
-        }
-
-        public void zoomOut() {
-            zoomFactor *= 0.9;
+        public void zoom(double zoom) {
+            zoomFactor *= zoom;
             repaint();
         }
 
