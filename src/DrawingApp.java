@@ -74,7 +74,11 @@ public class DrawingApp extends JFrame implements ActionListener, ChangeListener
         String[] intervals = {"0s", "1s", "5s", "10s", "30s", "60s"};
         for (String interval : intervals) {
             JMenuItem intervalItem = new JMenuItem(interval);
-            intervalItem.addActionListener(e -> setAutoSaveInterval(Integer.parseInt(interval.replace("s", "")) * 1000));
+            intervalItem.addActionListener(e -> {
+                int intervalMs = Integer.parseInt(interval.replace("s", "")) * 1000;
+                System.out.println("Selected auto-save interval: " + intervalMs + " ms"); //debug
+                setAutoSaveInterval(intervalMs);
+            });
             autoSaveMenu.add(intervalItem);
         }
 
