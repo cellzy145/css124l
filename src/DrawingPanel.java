@@ -35,6 +35,9 @@ public class DrawingPanel extends JPanel {
     private int canvasWidth = 1100;
     private int canvasHeight = 1100;
 
+    //store last saved file path for autosave
+    private File lastSavedFile;
+
     //constructor for DrawingPanel
     public DrawingPanel() {
         //set canvas size and color
@@ -255,7 +258,7 @@ public class DrawingPanel extends JPanel {
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToSave = fileChooser.getSelectedFile();
 
-                //make sure file has png extension
+                //make sure file has PNG extension
                 String filePath = fileToSave.getAbsolutePath();
                 if (!filePath.toLowerCase().endsWith(".png")) {
                     fileToSave = new File(filePath + ".png");
@@ -280,10 +283,74 @@ public class DrawingPanel extends JPanel {
 
                     //save image to file
                     ImageIO.write(image, "PNG", fileToSave);
+
+                    //store saved file path
+                    this.lastSavedFile = fileToSave;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        } else { //auto save - use documents folder
+            if (lastSavedFile != null) {
+                try {
+                    //logic if the file has been manually saved (save a copy with filename and " - autosave" appended)
+                    //same location too
+                    String originalPath = lastSavedFile.getAbsolutePath();
+                    String autoSavePath = originalPath.replace(".png", " - autosave.png");
+                    File autoSaveFile = new File(autoSavePath);
+
+                    //do the same thing with normal save
+                    BufferedImage imageToSave = new BufferedImage(
+                            canvasWidth, canvasHeight, BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g2d = imageToSave.createGraphics();
+
+                    g2d.setColor(Color.WHITE);
+                    g2d.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                    g2d.drawImage(image, 0, 0, null);
+                    g2d.dispose();
+
+                    //save new image to auto-save file
+                    ImageIO.write(imageToSave, "PNG", autoSaveFile);
+                    System.out.println("Auto-save file saved successfully: " + autoSaveFile.getAbsolutePath()); //debug
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                //if the file hasn't been manually saved then save to documents folder
+                String documentsPath = System.getProperty("user.home") + "/Documents";
+                File documentsFolder = new File(documentsPath);
+
+                //check if documents folder exist first
+                if (!documentsFolder.exists()) {
+                    documentsFolder.mkdirs(); //create the folder if it doesn't exist
+                }
+
+                //save in documents folder
+                File autoSaveFile = new File(documentsFolder, "autosave.png");
+
+                System.out.println("Auto-save file path: " + autoSaveFile.getAbsolutePath()); //debug
+
+                try {
+                    //do the same thing with normal save
+                    BufferedImage imageToSave = new BufferedImage(
+                            canvasWidth, canvasHeight, BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g2d = imageToSave.createGraphics();
+
+                    g2d.setColor(Color.WHITE);
+                    g2d.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                    g2d.drawImage(image, 0, 0, null);
+                    g2d.dispose();
+
+                    //save new image to auto-save file
+                    ImageIO.write(imageToSave, "PNG", autoSaveFile);
+                    System.out.println("Auto-save file saved successfully: " + autoSaveFile.getAbsolutePath()); //debug
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
 
     }
