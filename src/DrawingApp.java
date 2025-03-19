@@ -225,7 +225,10 @@ public class DrawingApp extends JFrame implements ActionListener, ChangeListener
         } else if (e.getSource() == aboutItem) {
             //message dialog about program
             String aboutMessage = "Simple Drawing App\n" +
-                    "Version 1.0";
+                    "Version 1.0\n" +
+                    "Authors:\n" +
+                    "Jian Brent Jumaquio\n" +
+                    "John Arion Galina";
             JOptionPane.showMessageDialog(this, aboutMessage, "About", JOptionPane.INFORMATION_MESSAGE);
         } else if (e.getSource() == controlsItem) {
             //controls dialog
