@@ -67,6 +67,18 @@ public class DrawingPanel extends JPanel {
                     //get the starting position of drawing, adjusted for zoom and panning
                     lastX = (int) ((e.getX() - offsetX) / zoomFactor) - padding;
                     lastY = (int) ((e.getY() - offsetY) / zoomFactor) - padding;
+
+                    //if clicked -- no need for mouseClicked
+                    if (lastX >= 0 && lastX < canvasWidth && lastY >= 0 && lastY < canvasHeight) {
+                        if (brushType.equals("Eraser")) {
+                            graphics.setColor(Color.WHITE);
+                        } else {
+                            graphics.setColor(brushColor);
+                        }
+                        graphics.setStroke(new BasicStroke(brushSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                        graphics.drawLine(lastX, lastY, lastX, lastY); //draw a single point
+                        repaint();
+                    }
                 }
             }
 
@@ -326,7 +338,7 @@ public class DrawingPanel extends JPanel {
                     documentsFolder.mkdirs(); //create the folder if it doesn't exist
                 }
 
-                //save in documents folder
+                 //save in documents folder
                 File autoSaveFile = new File(documentsFolder, "autosave.png");
 
                 System.out.println("Auto-save file path: " + autoSaveFile.getAbsolutePath()); //debug
